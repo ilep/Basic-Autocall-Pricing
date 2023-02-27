@@ -7,7 +7,7 @@ Created on Fri Jun 23 23:02:41 2017
 """
 
 
-
+import numpy, pandas
 from models import RandomPath
 
 
@@ -61,7 +61,7 @@ S0 = 100
 K = 100
 
 traj = trajs_bs.iloc[0,:]
-def product1_current_value_traj(traj,K, delta_t):
+def product1_current_value_traj(traj, K, delta_t):
     
 
     for year in range(1,5):
