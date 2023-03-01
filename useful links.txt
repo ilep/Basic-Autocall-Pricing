@@ -1,0 +1,6 @@
+https://quant.stackexchange.com/questions/35194/estimating-the-historical-drift-and-volatility
+https://en.wikipedia.org/wiki/Geometric_Brownian_motion
+
+===>
+https://core.ac.uk/download/pdf/10653545.pdf
+

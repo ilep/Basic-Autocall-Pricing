@@ -8,7 +8,7 @@ Created on Fri Jun 23 23:02:41 2017
 
 
 import numpy, pandas
-from models import RandomPath
+from models import RandomPaths
 
 
 
