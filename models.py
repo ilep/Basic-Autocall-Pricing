@@ -18,7 +18,7 @@ class RandomPaths:
     For black scholes, see: https://en.wikipedia.org/wiki/Geometric_Brownian_motion#:~:text=Geometric%20Brownian%20motion%20is%20used,model%20of%20stock%20price%20behavior.
     """
         
-    def __init__(self, model="black-scholes", T=1, delta_t=1./365, vol=0.2, mu=.1, S0=10, n_simulations=100):
+    def __init__(self, model="black-scholes", T=1, delta_t=1./365, vol=0.2, mu=r, S0=10, n_simulations=100):
         """
         - T: Time period (in years) of the underlying price path. Trajectories are generated in the [0, T] interval
         - delta_t: Trajectories are not purely continuous. There are price points every delta_t 
@@ -26,7 +26,7 @@ class RandomPaths:
         - mu: 
             On average, for small delta_t, underlying's return is equal to mu * delta_t between t and t + delta_t ==> delta_S  / S = mu * delta_t + vol * sqrt(delta_t) * N(0,1)
             mu is the expected continuously compounded rate at which grow the expected price. E(St) = S0 * exp(mu * t)
-            In risk neutral universe, mu = r (risk free rate) and payoff is actualised using r to get the price
+            In risk neutral universe (W brownian motion under risk neutral probability), mu = r (risk free rate) and payoff is actualised using r to get the price
         - S0: initial price
         """        
         self.model = model 
