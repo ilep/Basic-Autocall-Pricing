@@ -8,7 +8,7 @@ Created on Fri Jun 23 23:02:41 2017
 
 
 import numpy, pandas
-from models import RandomPaths
+from models import RandomPaths, Autocall
 
 
 
@@ -20,45 +20,13 @@ S0 = 10
 K = 9
 
 
+random_paths = RandomPaths(model="black-scholes", T=call.T, delta_t=1./(2*365), vol=vol, mu=r, S0=S0, n_simulations=100000)
 
-def generate_bs_trajs(S0, K, T, delta_t, vol, r, n_simus):
-    
-    nbr_delta_t = int((1/delta_t)*T)
-    delta_r = numpy.random.normal(loc=1+r*delta_t, scale=vol*numpy.sqrt(delta_t), size=(n_simus,nbr_delta_t))
-    delta_r=numpy.concatenate((numpy.ones(shape=(n_simus,1)), delta_r), axis=1)
-    
-    cols= ['t0'] + [('t0 + %d * delta_t' % j) if ((j*delta_t)%1 !=0.) else ('t0 + %d * year(s)' % int(j*delta_t)) for j in range(1, nbr_delta_t+1)]
-    indexes = ['traj_%d' %k for k in range(1, n_simus+1)]
-    
-    delta_r_df = pandas.DataFrame(delta_r, columns=cols, index=indexes)
-    trajs_bs = S0 * delta_r_df.cumprod(axis=1)
-    return trajs_bs
-    
-    
-trajs_bs = generate_bs_trajs(S0, K, T, delta_t, vol, r, 10000)
-    
-trajs_bs.iloc[1,:].plot(rot=45)
-
-    
-
-
-def call_price(S0, K, T, delta_t, vol, r, n_simus):    
-    
-    trajs_bs = generate_bs_trajs(S0, K, T, delta_t, vol, r, n_simus)
-    call_price = numpy.exp(-r*T) * numpy.mean(numpy.maximum(trajs_bs.iloc[:,-1] - K, 0))
-    return call_price
-
-    
-call_price(10, 11, 1, 1.0/(2*365), 0.2, 0.01, 100000)    
-
-# robust price
-numpy.mean([call_price(10, 11, 1, 1.0/(2*365), 0.2, 0.01, 10000) for _ in range(0,30)])
-    
+athena = Autocall(T=5, coupon_rate=.07)
+athena.get_price(random_paths)
 
 
 
-S0 = 100
-K = 100
 
 traj = trajs_bs.iloc[0,:]
 def product1_current_value_traj(traj, K, delta_t):

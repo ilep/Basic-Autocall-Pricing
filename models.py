@@ -98,18 +98,21 @@ class Call(Product):
 class Autocall(Product):
     
     def __init__(self, T=5, coupon_rate=.07):    
-        super().__init__(id, T)
+        super().__init__(T)
         self.coupon_rate = coupon_rate
         
-
+        
 
     def _get_current_value(self, path, delta_t):
         
         S0 = path.iloc[0]
-        Sf = path.iloc[self.T]
+        Sf = path.iloc[-1]
+        
+        # k_day_subdivision = (1 / delta_t) / 365
         
         for year in range(1, self.T):
             i_year = int((1 / delta_t) * year)
+            print(i_year)
             assert(path.index[i_year] == ('t0 + %d * year(s)' % year))
             
             if (Sf / S0) > 1:
@@ -131,11 +134,18 @@ class Autocall(Product):
         
         return current_value
 
-    def get_price(self, random_paths):
+    def get_current_values(self, random_paths):
         
-        self.df_current_values = random_paths.df.apply(self._get_current_value, axis=1, args=(random_paths.delta_t,))
-        price = self.df_current_values.mean() 
+        current_values = random_paths.df.apply(self._get_current_value, axis=1, args=(random_paths.delta_t,))
+        self.df_current_values = current_values
+        return current_values
+        
 
+    def get_price(self, random_paths):
+    
+        self.get_current_values(random_paths)
+        price = self.df_current_values.mean() 
+        
         return price
 
 
