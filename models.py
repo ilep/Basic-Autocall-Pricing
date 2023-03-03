@@ -104,7 +104,10 @@ class Autocall(Product):
         
 
     def _get_current_value(self, path, delta_t):
-        
+        """
+        path = random_paths.df.iloc[0]
+        delta_t = random_paths.delta_t
+        """
         S0 = path.iloc[0]
         Sf = path.iloc[-1]
         
@@ -112,17 +115,19 @@ class Autocall(Product):
         
         for year in range(1, self.T):
             i_year = int((1 / delta_t) * year)
-            print(i_year)
+
             assert(path.index[i_year] == ('t0 + %d * year(s)' % year))
-            
-            if (Sf / S0) > 1:
+
+            St = path.iloc[i_year]
+
+            if (St / S0) > 1:
                 payoff = 100 * (1. + year * self.coupon_rate)
                 current_value = numpy.exp(-year*r) * payoff
                 return current_value
         
         year=self.T
         i_year = int(1 / delta_t) * year
-        assert(path.index[i_year] == 't0 + 5 * year(s)')
+        assert(path.index[i_year] == 't0 + %d * year(s)' % year)
         
         if (Sf / S0) > 0.7:
             payoff = 100
@@ -135,6 +140,8 @@ class Autocall(Product):
         return current_value
 
     def get_current_values(self, random_paths):
+        
+        assert(random_paths.df.shape[1] == (self.T * (1 / random_paths.delta_t) + 1)) 
         
         current_values = random_paths.df.apply(self._get_current_value, axis=1, args=(random_paths.delta_t,))
         self.df_current_values = current_values

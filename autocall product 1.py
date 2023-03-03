@@ -8,21 +8,13 @@ Created on Fri Jun 23 23:02:41 2017
 
 
 import numpy, pandas
-from models import RandomPaths, Autocall
+from models import RandomPaths, Autocall, r
 
 
-
-T = 1
-delta_t = 1.0 / (365)
-vol = 0.2
-r = 0.01
-S0 = 10
-K = 9
-
-
-random_paths = RandomPaths(model="black-scholes", T=call.T, delta_t=1./(2*365), vol=vol, mu=r, S0=S0, n_simulations=100000)
 
 athena = Autocall(T=5, coupon_rate=.07)
+random_paths = RandomPaths(model="black-scholes", T=athena.T, delta_t=1./(2*365), vol=0.2, mu=r, S0=10, n_simulations=50000)
+
 athena.get_price(random_paths)
 
 
