@@ -97,10 +97,17 @@ else:
     payoff = (S_T / S0) * 100
 ```
 
-Each year until the maturity (10 years), if the underlying price is above the starting price S0, the product ends and pays the initial capital invested plus a coupon that is proportional to the number of years since inception. A maturity (year T=10):
-- if the underlying price is above the starting price S0 ==> 100 + coupon_rate * 10
-- if underlying is above 70% of the initial underlying value,  the initial capital is given back but no cpupon ==> 100
-- if underlying is under 70% of the initial underlying value, you start loosing money ==> no coupon and you are given back the level of the underlying (as if you were purely exposed to it)
+Each year until the maturity (10 years):
+
+- If the underlying price is above the starting price S0, the product ends and pays the initial capital invested plus a coupon that is proportional to the number of years since inception. 
+- If not, the product continues to live.
+
+A maturity:
+- If the underlying price is above the starting price S0 &rarr; 100 + coupon_rate * 10
+- If underlying is above 70% of the initial underlying value,  the initial capital is given back but no coupon &rarr; 100
+- If underlying is under 70% of the initial underlying value, you start loosing money &rarr; no coupon and you are given back the level of the underlying (as if you were purely exposed to it)
+
+
 
 ###### Pricing
 
@@ -113,3 +120,5 @@ random_paths = RandomPaths(model="black-scholes", T=athena.T, delta_t=1./(2*365)
 
 athena.get_price(random_paths)
 ```
+
+Typically, the "fundamental" obtained price will be around 98. The product is then sold 100 and the remaining 2 difference is shared between distributor and bank. 
